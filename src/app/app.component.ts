@@ -1,3 +1,4 @@
+import { identifierName } from '@angular/compiler';
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -11,27 +12,52 @@ import { OnInit } from '@angular/core';
 export class AppComponent {
   /*- Propriedades do componente -*/
   lista: Usuario[] = []
-  termo:string=''
-  /*------------------------------*/
+  listaCompleta: Usuario[] = []
+  termo: any = ''
 
-  /**
-   * Função executada na inicialização do componente
-   */
   ngOnInit() {
-      const getdata = async () => {
+    const getdata = async () => {
       let response = await fetch('../assets/json/dados_teste.json')
       let registros = await response.json()
       this.lista = registros.data;
+      this.listaCompleta = registros.data;
     }
     getdata()
   }
 
-  search(){
-console.log(this.termo);
-
+  sendData(event: any) {
+    this.termo = (event.target.value);
+    console.log(this.termo);
+    this.lista = this.listaCompleta.filter((info) => {
+      //"Queria estar assistindo tv".toLowerCase().indexOf("x")
+      if (info.id && ("" + info.id).toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.abbreviation && info.abbreviation.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.city && info.city.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.conference && info.conference.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.division && info.division.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.full_name && info.full_name.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      if (info.name && info.name.toLowerCase().indexOf(this.termo.toLowerCase()) != -1) {
+        return true
+      }
+      return false
+    })
   }
 
 }
+
+
 //interface para definir as propriedades de um usuário
 interface Usuario {
   id: number;
